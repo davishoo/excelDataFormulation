@@ -11,7 +11,6 @@ except  ModuleNotFoundError:
     quotationData = {}
 
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
-
 logging.disable(logging.CRITICAL)
 logging.debug('Start of program')
 
@@ -86,7 +85,7 @@ for row in range(3, sheet.max_row + 1):
     logging.debug('2. QuoteDateValueDict = %s ' %QuoteDateValueDict)  #check if data has been assigned successfully
 
    
-    fullQuotationValue = quotationData[Project][quotationSource][Hotel][RoomType][QuoteDate]
+    fullQuotationValue = quotationData[Project][quotationSource][Hotel][RoomType][QuoteDate]                #data type : list
     logging.debug('3. quotationData[%s][%s][%s][%s][%s] = %s ' %(Project, quotationSource,
                                                                  Hotel, RoomType, QuoteDate.strftime('%Y-%m-%d'), fullQuotationValue) ) 
 
@@ -96,11 +95,11 @@ for row in range(3, sheet.max_row + 1):
 
         while True:
             decision = input('1. Skip this input data? \n' + '2. Append this input data?\n' + 'Enter the choice number: ')
-            if not decision in [ '1' , '2']:
+            if decision in [ '1' , '2']:             
+                break
+            else:
                 print('Wrong input, pls select again...')
                 continue
-            else:
-                break
             
         if decision == '1':
             print('Data skipped...')
@@ -113,7 +112,6 @@ for row in range(3, sheet.max_row + 1):
 
 logging.debug(' End of loop...') 
    
-# Open a new text file and write the contents of countyData to it.
 
 timeStamp = time.strftime("%Y-%m-%d %H:%M",time.localtime(time.time()))
 
