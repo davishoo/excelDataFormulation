@@ -24,7 +24,7 @@ hotelSubDict = {}
 count = 0
 
 # Fill in hotel data from input file
-print('Reading rows...')
+print('Reading rows...\n\n')
 for row in range(2, sheet.max_row + 1):
     # read excel input data
     hotelName = sheet['A' + str(row)].value
@@ -65,21 +65,21 @@ for row in range(2, sheet.max_row + 1):
     logging.debug('3 hotelDB[%s] = %s ' %(hotelName, HotelDataValue))
 
     if  len(HotelDataValue) > 0:
-        print('Hotel data already exists for [%s]\n' %(hotelName))
+        print('Hotel data already exists for [%s]' %(hotelName))
 
         while True:
             decision = input('1. Skip this input data? \n' + '2. Append this input data?\n' + 'Enter the choice number: ')
             if decision in [ '1' , '2']:
                 break               
             else:
-                print('Wrong input, pls select again...')
+                print('\nWrong input, pls select again...\n')
                 continue
 
         if decision == '1':
-            print('Data skipped...')
+            print('Data skipped...\n')
             continue
         else:
-            print('Data appended...')
+            print('Data appended...\n')
 
     HotelDataValue += [hotelSubDict]
     count += 1
@@ -88,7 +88,7 @@ logging.debug(' End of loop...')
 
 timeStamp = time.strftime("%Y-%m-%d %H:%M",time.localtime(time.time()))
 
-print('Writing results...')
+print('Writing results...\n')
 resultFile = open('hotelDatabase.py', 'w', encoding = "utf-8")
 resultFile.write('import datetime\n\n')
 resultFile.write('# Update time: %s\n\n'%timeStamp)
