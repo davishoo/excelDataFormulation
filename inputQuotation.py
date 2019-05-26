@@ -1,20 +1,26 @@
 #! python3
 
-import openpyxl, pprint, logging
+import openpyxl, pprint, logging, time
 from datetime import datetime
 
+try:
+    from hotelQuotation import quotationData
+    print('Import database module: [hotelQuotation] ...')
+except  ModuleNotFoundError:
+    print('warning: no hotelQuotation module found!')
+    quotationData = {}
 
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 
-#logging.disable(logging.CRITICAL)
+logging.disable(logging.CRITICAL)
 logging.debug('Start of program')
 
 print('Opening workbook...')
 wb = openpyxl.load_workbook('quotationData.xlsx')
 sheet = wb['Sheet1']
 
-quotationData = {}
 QuoteDateValueDict = {}
+count = 0
 
 # Fill in quotation data from input file
 print('Reading rows...')
@@ -102,14 +108,20 @@ for row in range(3, sheet.max_row + 1):
         else:
             print('Data appended...')
             
-    fullQuotationValue += [QuoteDateValueDict] 
+    fullQuotationValue += [QuoteDateValueDict]
+    count += 1
 
 logging.debug(' End of loop...') 
    
 # Open a new text file and write the contents of countyData to it.
+
+timeStamp = time.strftime("%Y-%m-%d %H:%M",time.localtime(time.time()))
+
 print('Writing results...')
 resultFile = open('hotelQuotation.py', 'w', encoding = "utf-8")
-resultFile.write('import datetime\n\n\n')
+resultFile.write('import datetime\n\n')
+resultFile.write('# Update time: %s\n\n'%timeStamp)
 resultFile.write('quotationData = ' + pprint.pformat(quotationData))
 resultFile.close()
-print('Done.')
+
+print('Done! total %s data are write into the database.  \n'%count)
