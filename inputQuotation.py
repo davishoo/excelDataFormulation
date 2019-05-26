@@ -6,7 +6,7 @@ from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 
-logging.disable(logging.CRITICAL)
+#logging.disable(logging.CRITICAL)
 logging.debug('Start of program')
 
 print('Opening workbook...')
@@ -21,29 +21,32 @@ print('Reading rows...')
 for row in range(3, sheet.max_row + 1):
     # read excel input data
     Project  = sheet['A' + str(row)].value
-    Hotel = sheet['B' + str(row)].value
-    RoomType = sheet['C' + str(row)].value
-    QuoteDate = sheet['D' + str(row)].value     # need change data type
-    ExpireDate = sheet['E' + str(row)].value
-    Day1 = sheet['F' + str(row)].value
-    Day2 = sheet['G' + str(row)].value
-    Day3 = sheet['H' + str(row)].value
-    Day4 = sheet['I' + str(row)].value
-    Tax = sheet['J' + str(row)].value
-    Breakfast = sheet['K' + str(row)].value
-    breakfastPrice = sheet['L' + str(row)].value
-    Prepayment = sheet['M' + str(row)].value
-    minRoomQty = sheet['N' + str(row)].value
-    QuotePerson = sheet['O' + str(row)].value
+    quotationSource = sheet['B' + str(row)].value          #insert
+    Hotel = sheet['C' + str(row)].value
+    RoomType = sheet['D' + str(row)].value
+    QuoteDate = sheet['E' + str(row)].value     
+    ExpireDate = sheet['F' + str(row)].value
+    Day1 = sheet['G' + str(row)].value
+    Day2 = sheet['H' + str(row)].value
+    Day3 = sheet['I' + str(row)].value
+    Day4 = sheet['J' + str(row)].value
+    Tax = sheet['K' + str(row)].value
+    Breakfast = sheet['L' + str(row)].value
+    breakfastPrice = sheet['M' + str(row)].value
+    Prepayment = sheet['N' + str(row)].value
+    minRoomQty = sheet['O' + str(row)].value
+    QuotePerson = sheet['P' + str(row)].value
 
     # Make sure the key for this Project exists.
     quotationData.setdefault(Project, {})
     # Make sure the key for this Hotel in this state exists.
-    quotationData[Project].setdefault(Hotel, {})
+    quotationData[Project].setdefault(quotationSource, {})    #insert
+    # Make sure the key for this Hotel in this state exists.
+    quotationData[Project][quotationSource].setdefault(Hotel, {})
     # Make sure the key for this room type in this state exists.
-    quotationData[Project][Hotel].setdefault(RoomType, {})
+    quotationData[Project][quotationSource][Hotel].setdefault(RoomType, {})
      # Make sure the key for this quote date in this state exists.
-    quotationData[Project][Hotel][RoomType].setdefault(QuoteDate, [])
+    quotationData[Project][quotationSource][Hotel][RoomType].setdefault(QuoteDate, [])
 
 
     #set default value
@@ -77,11 +80,13 @@ for row in range(3, sheet.max_row + 1):
     logging.debug('2. QuoteDateValueDict = %s ' %QuoteDateValueDict)  #check if data has been assigned successfully
 
    
-    fullQuotationDict = quotationData[Project][Hotel][RoomType][QuoteDate]
-    logging.debug('3. quotationData[Project][Hotel][RoomType][QuoteDate] = %s ' %fullQuotationDict)
+    fullQuotationValue = quotationData[Project][quotationSource][Hotel][RoomType][QuoteDate]
+    logging.debug('3. quotationData[%s][%s][%s][%s][%s] = %s ' %(Project, quotationSource,
+                                                                 Hotel, RoomType, QuoteDate.strftime('%Y-%m-%d'), fullQuotationValue) ) 
 
-    if  len(fullQuotationDict) > 0:
-        print('Quotation data already exists for %s-%s-%s' %(Project, Hotel, RoomType) + ' : ' + QuoteDate.strftime('%Y-%m-%d'))
+    if  len(fullQuotationValue) > 0:
+        print('Quotation data already exists for [%s]-[%s]-[%s]-[%s]-[%s]\n' %(Project,
+                                                                               quotationSource, Hotel, RoomType, QuoteDate.strftime('%Y-%m-%d')))
 
         while True:
             decision = input('1. Skip this input data? \n' + '2. Append this input data?\n' + 'Enter the choice number: ')
@@ -97,14 +102,14 @@ for row in range(3, sheet.max_row + 1):
         else:
             print('Data appended...')
             
-    fullQuotationDict += [QuoteDateValueDict] 
+    fullQuotationValue += [QuoteDateValueDict] 
 
 logging.debug(' End of loop...') 
    
 # Open a new text file and write the contents of countyData to it.
 print('Writing results...')
 resultFile = open('hotelQuotation.py', 'w', encoding = "utf-8")
-resultFile.write('import datetime\n')
+resultFile.write('import datetime\n\n\n')
 resultFile.write('quotationData = ' + pprint.pformat(quotationData))
 resultFile.close()
 print('Done.')
