@@ -6,7 +6,7 @@ from datetime import datetime
 try:
     from hotelQuotation import quotationData
     print('Import database module: [hotelQuotation] ...')
-except  ModuleNotFoundError:
+except:
     print('warning: no hotelQuotation module found!')
     quotationData = {}
 
