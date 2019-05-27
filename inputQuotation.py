@@ -22,7 +22,7 @@ QuoteDateValueDict = {}
 count = 0
 
 # Fill in quotation data from input file
-print('Reading rows...')
+print('Reading rows...\n\n')
 for row in range(3, sheet.max_row + 1):
     # read excel input data
     Project  = sheet['A' + str(row)].value
@@ -98,14 +98,14 @@ for row in range(3, sheet.max_row + 1):
             if decision in [ '1' , '2']:             
                 break
             else:
-                print('Wrong input, pls select again...')
+                print('\nWrong input, pls select again...\n')
                 continue
             
         if decision == '1':
-            print('Data skipped...')
+            print('Data skipped...\n')
             continue
         else:
-            print('Data appended...')
+            print('Data appended...\n')
             
     fullQuotationValue += [QuoteDateValueDict]
     count += 1
@@ -115,7 +115,7 @@ logging.debug(' End of loop...')
 
 timeStamp = time.strftime("%Y-%m-%d %H:%M",time.localtime(time.time()))
 
-print('Writing results...')
+print('Writing results...\n')
 resultFile = open('hotelQuotation.py', 'w', encoding = "utf-8")
 resultFile.write('import datetime\n\n')
 resultFile.write('# Update time: %s\n\n'%timeStamp)
